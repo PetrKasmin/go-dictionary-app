@@ -1,0 +1,53 @@
+<header>
+    {{template "views/partials/menu" .}}
+</header>
+
+<section class="container">
+    <div class="box"></div>
+    <h1>{{$dictionary := .dictionary}} {{ $dictionary.Title }} </h1>
+
+    <ul id="abc">
+        {{range .letters}}
+            <li>
+                <a {{if .IsActive}}class="active"{{end}} href="/{{$dictionary.Slug}}?letter={{.Title}}">
+                    {{.Title}}
+                </a>
+            </li>
+        {{end}}
+    </ul>
+
+    <ul id="words">
+        {{range .words}}
+            <li>
+                <a href="/{{$dictionary.Slug}}/{{.Slug}}">{{.Title}}</a>
+            </li>
+        {{end}}
+    </ul>
+
+    <ul class="pagination">
+        <li>
+            {{if .prev}}
+                <a href="/{{$dictionary.Slug}}?letter={{.letter}}&page={{.prev}}">
+                    <svg class="icon mr" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                        <path d="m5 12 7 6v-5h6v-2h-6V6z"></path>
+                    </svg>
+                    Предыдущая
+                </a>
+            {{end}}
+        </li>
+        <li>
+            {{if .next}}
+                {{if .canNextPage}}
+                    <a href="/{{$dictionary.Slug}}?letter={{.letter}}&page={{.next}}">
+                        Следующая
+                        <svg class="icon ml" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                            <path d="m19 12-7-6v5H6v2h6v5z"></path>
+                        </svg>
+                    </a>
+                {{end}}
+            {{end}}
+        </li>
+    </ul>
+
+</section>
+{{template "views/partials/footer" .}}

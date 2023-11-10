@@ -1,0 +1,44 @@
+<header>
+    {{template "views/partials/menu" .}}
+</header>
+
+<article class="container">
+    <div class="box"></div>
+    <p><a href="/{{.word.DictionarySlug}}"><strong>{{.word.DictionaryTitle}}</strong></a></p>
+    <h1>{{.word.Title}}</h1>
+    <p>{{.word.Content}}</p>
+    <ol id="more">
+        {{range .words}}
+            <li>
+                <a href="/{{.DictionarySlug}}/{{.slug}}">
+                    {{.title}}
+                </a>
+                — <span>{{.Content}}</span>
+                <small>{{.DictionaryTitle}}</small>
+            </li>
+        {{end}}
+    </ol>
+    <ul class="pagination">
+        <li>
+            {{if .prevLink.Slug}}
+                <a href="/{{.prevLink.DictionarySlug}}/{{.prevLink.Slug}}">
+                    <svg class="icon mr" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                        <path d="m5 12 7 6v-5h6v-2h-6V6z"></path>
+                    </svg>
+                    {{.prevLink.Title}}
+                </a>
+            {{end}}
+        </li>
+        <li>
+            {{if .nextLink.Slug}}
+                <a href="/{{.nextLink.DictionarySlug}}/{{.nextLink.Slug}}">
+                    {{.nextLink.Title}}
+                    <svg class="icon ml" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                        <path d="m19 12-7-6v5H6v2h6v5z"></path>
+                    </svg>
+                </a>
+            {{end}}
+        </li>
+    </ul>
+</article>
+{{template "views/partials/footer" .}}

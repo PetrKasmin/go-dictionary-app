@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /feedback
+Disallow: /terms
+Disallow: /search
+Disallow: /dashboard
+Disallow: /
+
+Sitemap: https://encycloped.ru/sitemaps/sitemap.xml
