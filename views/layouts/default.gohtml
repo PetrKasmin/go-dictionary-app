@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{{.Site}} — {{.MetaTitle}}</title>
-    <meta property="og:title" content="{{.Site}} — {{.MetaTitle}}">
-    <meta name="description" content="{{.MetaDescription}}">
-    <meta property="og:description" content="{{.MetaDescription}}">
+    <title>{{.Meta.Site}} — {{.Meta.Title}}</title>
+    <meta property="og:title" content="{{.Meta.Site}} — {{.Meta.Title}}">
+    <meta name="description" content="{{.Meta.Description}}">
+    <meta property="og:description" content="{{.Meta.Description}}">
     <meta name="device-detect" content="desktop">
-    <meta property="og:url" content="{{.Host}}">
+    <meta property="og:url" content="{{.Meta.Host}}">
     <link href="/public/style.css" rel="stylesheet">
-    <meta property="og:site_name" content="{{.Site}}">
+    <meta property="og:site_name" content="{{.Meta.Site}}">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="ru">
     <meta property="og:image" content="cover.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta name="apple-mobile-web-app-title" content="{{.MetaTitle}}">
+    <meta name="apple-mobile-web-app-title" content="{{.Meta.Title}}">
     <link rel="shortcut icon" href="/public/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="/public/icon.png">
     <script type="text/javascript">

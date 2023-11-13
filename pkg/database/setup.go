@@ -15,20 +15,15 @@ func SetupDatabase() {
 	port, err := strconv.ParseUint(p, 10, 32)
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		env.GetEnv("DB_USER", "mbwar"),
-		env.GetEnv("DB_PASSWORD", "A9e55#MPo"),
-		env.GetEnv("DB_HOST", "127.0.0.1"),
+		env.GetEnv("DB_USER", "root"),
+		env.GetEnv("DB_PASSWORD", ""),
+		env.GetEnv("DB_HOST", "0.0.0.0"),
 		port,
-		env.GetEnv("DB_NAME", "db_encycloped"),
+		env.GetEnv("DB_NAME", ""),
 	)
 
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
-
-	//DB.AutoMigrate(&models.Tag{})
-	//DB.AutoMigrate(&models.Dictionary{})
-	//DB.AutoMigrate(&models.Letter{})
-	//DB.AutoMigrate(&models.Word{})
 }

@@ -6,6 +6,13 @@ import (
 	"net/http"
 )
 
+const (
+	envKey         = "ENV"
+	envFile        = ".env"
+	envProduction  = "production"
+	envDevelopment = "development"
+)
+
 var Env map[string]string
 
 func GetEnv(key, def string) string {
@@ -16,8 +23,6 @@ func GetEnv(key, def string) string {
 }
 
 func SetupEnvFile(embedFS http.FileSystem) {
-	envFile := ".env"
-
 	file, err := embedFS.Open(envFile)
 	if err != nil {
 		panic(err)
@@ -33,4 +38,17 @@ func SetupEnvFile(embedFS http.FileSystem) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func IsProduction() bool {
+	value, exist := Env[envKey]
+	if !exist || value == envDevelopment {
+		return false
+	}
+
+	if value == envProduction {
+		return true
+	}
+
+	return false
 }

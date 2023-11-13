@@ -1,16 +1,66 @@
 package helpers
 
 import (
+	"errors"
 	"fmt"
+	"github.com/app-dictionary/app/models"
 	"github.com/sabloger/sitemap-generator/smg"
+	"io"
 	"log"
+	"net/http"
 	"regexp"
 	"strings"
 	"time"
 )
 
-func SiteMapGenerator(links []string) {
-	// Генерация карты сайта
+const (
+	robotsFile        = "robots.txt"
+	sitemapsDir       = "sitemaps"
+	sitemapsIndexFile = "sitemap.xml.gz"
+)
+
+func GetChunks(page []models.Dictionary, size int) [][]models.Dictionary {
+	var chunk [][]models.Dictionary
+	chunkSize := (len(page) + size - 1) / size
+	for i := 0; i < len(page); i += chunkSize {
+		end := i + chunkSize
+		if end > len(page) {
+			end = len(page)
+		}
+		chunk = append(chunk, page[i:end])
+	}
+
+	return chunk
+}
+
+func GetStaticFiles(embedFS http.FileSystem, param string) ([]byte, error) {
+	var path string
+	switch param {
+	case sitemapsDir:
+		path = fmt.Sprintf("public/%s/%s", param, sitemapsIndexFile)
+	case sitemapsIndexFile:
+		path = fmt.Sprintf("public/%s/%s", sitemapsDir, param)
+	case robotsFile:
+		path = fmt.Sprintf("public/%s", param)
+	default:
+		return nil, errors.New("no static")
+	}
+
+	file, err := embedFS.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func SitemapGenerator(links []string) {
 	sitemapLinks := GetChunksStr(links, GetDenominator(len(links), 50000))
 	FileCreateSiteMap(true, sitemapLinks)
 }
