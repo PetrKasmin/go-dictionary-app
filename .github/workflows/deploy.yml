@@ -42,7 +42,7 @@ jobs:
           scp ./app root@212.109.192.85:/var/www/encycloped.ru
           ssh root@212.109.192.85 "systemctl restart your-app"
         env:
-          SSH_PRIVATE_KEY: ${{ env.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ENV: ${{ env.ENV }}
           APP_HOST: ${{ env.APP_HOST }}
           APP_PORT: ${{ env.APP_PORT }}
