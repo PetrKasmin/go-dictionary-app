@@ -32,6 +32,10 @@ jobs:
         with:
           go-version: 1.21
 
+      - name: Load GitHub Actions env
+        run: |
+          export $(cat .env.github-actions | xargs)
+
       - name: Build and Deploy
         run: |
           go build -o app
