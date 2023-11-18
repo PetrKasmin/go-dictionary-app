@@ -34,7 +34,7 @@ func NewApplication(embedFS http.FileSystem) *fiber.App {
 		GETOnly:               true,
 		UnescapePath:          true,
 		ViewsLayout:           "views/layouts/default",
-		DisableStartupMessage: true,
+		DisableStartupMessage: env.IsProduction(),
 	})
 
 	app.Use("/public", filesystem.New(filesystem.Config{
