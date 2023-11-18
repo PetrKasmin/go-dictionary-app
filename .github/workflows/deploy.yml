@@ -1,0 +1,52 @@
+name: Deploy to Web Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      ENV: production
+      APP_HOST: localhost
+      APP_PORT: 3000
+      APP_PROTO: https
+      DB_HOST: localhost
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      ADMIN_LOGIN: ${{ secrets.ADMIN_LOGIN }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.21
+
+      - name: Build and Deploy
+        run: |
+          go build -o app
+          scp ./app user@your-server-ip:/path/to/destination
+          ssh user@your-server-ip "systemctl restart your-app"
+        env:
+          SSH_PRIVATE_KEY: ${{ env.SSH_PRIVATE_KEY }}
+          ENV: ${{ env.ENV }}
+          APP_HOST: ${{ env.APP_HOST }}
+          APP_PORT: ${{ env.APP_PORT }}
+          APP_PROTO: ${{ env.APP_PROTO }}
+          DB_HOST: ${{ env.DB_HOST }}
+          DB_PORT: ${{ env.DB_PORT }}
+          DB_NAME: ${{ env.DB_NAME }}
+          DB_USER: ${{ env.DB_USER }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
+          ADMIN_LOGIN: ${{ env.ADMIN_LOGIN }}
+          ADMIN_PASSWORD: ${{ env.ADMIN_PASSWORD }}

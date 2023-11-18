@@ -9,7 +9,6 @@ import (
 const (
 	envKey         = "ENV"
 	envFile        = ".env"
-	envProduction  = "production"
 	envDevelopment = "development"
 )
 
@@ -46,9 +45,5 @@ func IsProduction() bool {
 		return false
 	}
 
-	if value == envProduction {
-		return true
-	}
-
-	return false
+	return true
 }
