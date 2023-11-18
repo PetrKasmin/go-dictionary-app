@@ -4,6 +4,7 @@ import (
 	"github.com/joho/godotenv"
 	"io"
 	"net/http"
+	"os"
 )
 
 const (
@@ -15,6 +16,13 @@ const (
 var Env map[string]string
 
 func GetEnv(key, def string) string {
+	if len(Env) == 0 {
+		value := os.Getenv(key)
+		if value == "" {
+			return def
+		}
+	}
+
 	if val, ok := Env[key]; ok {
 		return val
 	}
@@ -24,7 +32,7 @@ func GetEnv(key, def string) string {
 func SetupEnvFile(embedFS http.FileSystem) {
 	file, err := embedFS.Open(envFile)
 	if err != nil {
-		panic(err)
+		return
 	}
 	defer file.Close()
 
@@ -41,7 +49,7 @@ func SetupEnvFile(embedFS http.FileSystem) {
 
 func IsProduction() bool {
 	value, exist := Env[envKey]
-	if !exist || value == envDevelopment {
+	if exist && value == envDevelopment {
 		return false
 	}
 

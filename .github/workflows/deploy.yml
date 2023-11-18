@@ -12,10 +12,10 @@ jobs:
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       ENV: production
-      APP_HOST: localhost
+      APP_HOST: 0.0.0.0
       APP_PORT: 3000
       APP_PROTO: https
-      DB_HOST: localhost
+      DB_HOST: 0.0.0.0
       DB_PORT: ${{ secrets.DB_PORT }}
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USER: ${{ secrets.DB_USER }}
