@@ -34,7 +34,7 @@ jobs:
 
       - name: Load GitHub Actions env
         run: |
-          export $(cat .env.github-actions | xargs)
+          export $(cat .env.deploy | xargs)
 
       - name: Build and Deploy
         run: |

@@ -2,8 +2,6 @@ package env
 
 import (
 	"github.com/joho/godotenv"
-	"io"
-	"net/http"
 )
 
 const (
@@ -22,24 +20,14 @@ func GetEnv(key, def string) string {
 	return def
 }
 
-func SetupEnvFile(embedFS http.FileSystem) {
+func SetupEnvFile() {
 	envFile := envFileDevelopment
 	if IsProduction() {
 		envFile = envFileGithubDeploy
 	}
 
-	file, err := embedFS.Open(envFile)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	data, err := io.ReadAll(file)
-	if err != nil {
-		panic(err)
-	}
-
-	Env, err = godotenv.Unmarshal(string(data))
+	var err error
+	Env, err = godotenv.Read(envFile)
 	if err != nil {
 		panic(err)
 	}
