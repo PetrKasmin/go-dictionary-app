@@ -40,7 +40,7 @@ jobs:
 
       - name: Build App
         run: |
-          go build -o app-dictionary
+          go build -o app-dictionary -ldflags "-linkmode external -extldflags -static"
           
       - name: Deploy to VM
         run: |
