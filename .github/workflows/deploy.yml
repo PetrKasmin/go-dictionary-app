@@ -76,7 +76,7 @@ jobs:
           echo "[Service]" >> ${{ env.APP_NAME }}.service
           echo "User=root" >> ${{ env.APP_NAME }}.service
           echo "WorkingDirectory=${DEPLOY_DIRECTORY}" >> ${{ env.APP_NAME }}.service
-          echo "ExecStart=${DEPLOY_DIRECTORY}/${{ env.APP_NAME }}" >> app-dictionary.service
+          echo "ExecStart=${DEPLOY_DIRECTORY}/${{ env.APP_NAME }}" >> ${{ env.APP_NAME }}.service
           echo "Restart=always" >> ${{ env.APP_NAME }}.service
           echo "RestartSec=4" >> ${{ env.APP_NAME }}.service
           echo "StandardOutput=inherit" >> ${{ env.APP_NAME }}.service
