@@ -9,7 +9,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/csrf"
-	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -42,11 +41,6 @@ func NewApplication(embedFS http.FileSystem) *fiber.App {
 
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestSpeed,
-	}))
-
-	app.Use(favicon.New(favicon.Config{
-		File: "./public/favicon.ico",
-		URL:  "./public/favicon.ico",
 	}))
 
 	app.Use("/public", filesystem.New(filesystem.Config{
