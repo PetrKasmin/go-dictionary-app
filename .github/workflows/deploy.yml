@@ -65,7 +65,7 @@ jobs:
 
       - name: Replace .env_deploy with .env
         run: |
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv ${{ env.DEPLOY_DIRECTORY }}/.env_deploy ${{ env.DEPLOY_DIRECTORY }}/.env"
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv ${{ env.DEPLOY_DIRECTORY }}/.env.deploy ${{ env.DEPLOY_DIRECTORY }}/.env"
 
       - name: Remove old systemd service file
         run: |
