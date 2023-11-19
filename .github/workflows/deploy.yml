@@ -47,8 +47,16 @@ jobs:
           sudo apt-get install -y ssh rsync
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
           chmod 600 deploy_key.pem
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mkdir -p ${{ env.DEPLOY_DIRECTORY }}"
-          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='*' --include='app-dictionary' --include='deployment/' --exclude='*' ./ ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
+
+          # Копирование бинарника
+          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./app-dictionary ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
+
+          # Копирование папки deployment
+          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./deployment ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
+
+          # Копирование .env_deploy и замена на .env
+          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' .env.deploy ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}/.env.deploy
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv ${{ env.DEPLOY_DIRECTORY }}/.env.deploy ${{ env.DEPLOY_DIRECTORY }}/.env"
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ENV: ${{ env.ENV }}
@@ -62,10 +70,6 @@ jobs:
           DB_PASSWORD: ${{ env.DB_PASSWORD }}
           ADMIN_LOGIN: ${{ env.ADMIN_LOGIN }}
           ADMIN_PASSWORD: ${{ env.ADMIN_PASSWORD }}
-
-      - name: Replace .env_deploy with .env
-        run: |
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv ${{ env.DEPLOY_DIRECTORY }}/.env.deploy ${{ env.DEPLOY_DIRECTORY }}/.env"
 
       - name: Remove old systemd service file
         run: |
