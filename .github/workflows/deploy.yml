@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      HOST: root@212.109.192.85
+      DEPLOY_DIRECTORY: /var/www/encycloped.ru
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       ENV: production
       APP_HOST: 0.0.0.0
@@ -36,11 +38,17 @@ jobs:
         run: |
           export $(cat .env.deploy | xargs)
 
-      - name: Build and Deploy
+      - name: Build App
         run: |
           go build -o app
-          scp ./app root@212.109.192.85:/var/www/encycloped.ru
-          ssh root@212.109.192.85 "systemctl restart your-app"
+          
+      - name: Deploy to VM
+        run: |
+          sudo apt-get install -y ssh rsync
+          echo "SSH_PRIVATE_KEY" > deploy_key.pem
+          chmod 600 deploy_key.pem
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mkdir -p ${{ env.DEPLOY_DIRECTORY }}"
+          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./ ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ENV: ${{ env.ENV }}
