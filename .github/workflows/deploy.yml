@@ -61,19 +61,37 @@ jobs:
           chmod 600 deploy_key.pem
           ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mkdir -p ${{ env.DEPLOY_DIRECTORY }}"
           rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./app-dictionary ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
-          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./deployment ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
 
       - name: Remove old systemd service file
         run: |
           ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "rm -f /etc/systemd/system/app-dictionary.service"
+
+      - name: Create systemd service file
+        run: |
+          echo "[Unit]" > app-dictionary.service
+          echo "Description=app dictionary" >> app-dictionary.service
+          echo "After=network.target" >> app-dictionary.service
+          echo "" >> app-dictionary.service
+          echo "[Service]" >> app-dictionary.service
+          echo "User=root" >> app-dictionary.service
+          echo "WorkingDirectory=${DEPLOY_DIRECTORY}" >> app-dictionary.service
+          echo "ExecStart=${DEPLOY_DIRECTORY}/app-dictionary" >> app-dictionary.service
+          echo "Restart=always" >> app-dictionary.service
+          echo "RestartSec=4" >> app-dictionary.service
+          echo "StandardOutput=inherit" >> app-dictionary.service
+          echo "" >> app-dictionary.service
+          echo "[Install]" >> app-dictionary.service
+          echo "WantedBy=multi-user.target" >> app-dictionary.service
+
       - name: List workspace contents
         run: |
           echo "Listing deployment folder contents:"
           ls -la ${{ github.workspace }}/deployment
+
       - name: Copy systemd service file
         run: |
-          scp -i deploy_key.pem -o StrictHostKeyChecking=no ${{ github.workspace }}/deployment/app-dictionary.service ${{ env.HOST }}:/tmp/app-dictionary.service
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv /tmp/app-dictionary.service /etc/systemd/system/app-dictionary.service"
+          scp -i deploy_key.pem -o StrictHostKeyChecking=no app-dictionary.service ${{ env.HOST }}:/etc/systemd/system/app-dictionary.service
+
       - name: Start application
         run: |
           ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "systemctl daemon-reload && systemctl restart app-dictionary.service"
