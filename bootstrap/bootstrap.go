@@ -5,6 +5,7 @@ import (
 	"github.com/app-dictionary/pkg/env"
 	"github.com/app-dictionary/pkg/router"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/csrf"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
@@ -36,6 +37,10 @@ func NewApplication(embedFS http.FileSystem) *fiber.App {
 		ViewsLayout:           "views/layouts/default",
 		DisableStartupMessage: env.IsProduction(),
 	})
+
+	app.Use(compress.New(compress.Config{
+		Level: compress.LevelBestSpeed,
+	}))
 
 	app.Use("/public", filesystem.New(filesystem.Config{
 		Root:       embedFS,
