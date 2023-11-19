@@ -66,14 +66,14 @@ jobs:
       - name: Remove old systemd service file
         run: |
           ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "rm -f /etc/systemd/system/app-dictionary.service"
-          - name: List workspace contents
-            run: |
-              echo "Listing deployment folder contents:"
-              ls -la ${{ github.workspace }}/deployment
-          - name: Copy systemd service file
-            run: |
-              scp -i deploy_key.pem -o StrictHostKeyChecking=no ${{ github.workspace }}/deployment/app-dictionary.service ${{ env.HOST }}:/tmp/app-dictionary.service
-              ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv /tmp/app-dictionary.service /etc/systemd/system/app-dictionary.service"
-          - name: Start application
-            run: |
-              ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "systemctl daemon-reload && systemctl restart app-dictionary.service"
+      - name: List workspace contents
+        run: |
+          echo "Listing deployment folder contents:"
+          ls -la ${{ github.workspace }}/deployment
+      - name: Copy systemd service file
+        run: |
+          scp -i deploy_key.pem -o StrictHostKeyChecking=no ${{ github.workspace }}/deployment/app-dictionary.service ${{ env.HOST }}:/tmp/app-dictionary.service
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv /tmp/app-dictionary.service /etc/systemd/system/app-dictionary.service"
+      - name: Start application
+        run: |
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "systemctl daemon-reload && systemctl restart app-dictionary.service"
