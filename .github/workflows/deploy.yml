@@ -55,8 +55,8 @@ jobs:
           rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./deployment ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
 
           # Копирование .env_deploy и замена на .env
-          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' .env.deploy ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}/.env.deploy
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv ${{ env.DEPLOY_DIRECTORY }}/.env.deploy ${{ env.DEPLOY_DIRECTORY }}/.env"
+#          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' .env.deploy ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}/.env.deploy
+#          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv ${{ env.DEPLOY_DIRECTORY }}/.env.deploy ${{ env.DEPLOY_DIRECTORY }}/.env"
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           APP_HOST: ${{ env.APP_HOST }}
@@ -69,6 +69,26 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           ADMIN_LOGIN: ${{ secrets.ADMIN_LOGIN }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+      - name: Create .env on VM
+        run: |
+          echo "ENV=${{ env.ENV }}" > .env
+          echo "APP_HOST=${{ env.APP_HOST }}" >> .env
+          echo "APP_PORT=${{ env.APP_PORT }}" >> .env
+          echo "APP_PROTO=${{ env.APP_PROTO }}" >> .env
+          echo "DB_HOST=${{ env.DB_HOST }}" >> .env
+          echo "DB_PORT=${{ env.DB_PORT }}" >> .env
+          echo "DB_NAME=${{ env.DB_NAME }}" >> .env
+          echo "DB_USER=${{ env.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ env.DB_PASSWORD }}" >> .env
+          echo "ADMIN_LOGIN=${{ env.ADMIN_LOGIN }}" >> .env
+          echo "ADMIN_PASSWORD=${{ env.ADMIN_PASSWORD }}" >> .env
+
+          # Переместить .env в нужное место
+          mv .env ${{ env.DEPLOY_DIRECTORY }}
+        working-directory: ${{ env.DEPLOY_DIRECTORY }}
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Remove old systemd service file
         run: |
