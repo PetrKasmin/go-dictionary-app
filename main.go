@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-//go:embed public/* views/*
+//go:embed public/* views/* .env
 var content embed.FS
 
 func main() {

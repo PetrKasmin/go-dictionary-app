@@ -19,7 +19,7 @@ import (
 
 func NewApplication(embedFS http.FileSystem) *fiber.App {
 
-	env.SetupEnvFile()
+	env.SetupEnvFile(embedFS)
 	database.SetupDatabase()
 
 	engine := html.NewFileSystem(embedFS, ".gohtml")

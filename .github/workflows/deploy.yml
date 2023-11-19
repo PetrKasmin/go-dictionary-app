@@ -34,40 +34,34 @@ jobs:
         with:
           go-version: 1.21
 
+      - name: Create .env file
+        run: |
+          echo "HOST=${HOST}" >> .env
+          echo "DEPLOY_DIRECTORY=${DEPLOY_DIRECTORY}" >> .env
+          echo "ENV=${ENV}" >> .env
+          echo "APP_HOST=${APP_HOST}" >> .env
+          echo "APP_PORT=${APP_PORT}" >> .env
+          echo "APP_PROTO=${APP_PROTO}" >> .env
+          echo "DB_HOST=${DB_HOST}" >> .env
+          echo "DB_PORT=${DB_PORT}" >> .env
+          echo "DB_NAME=${DB_NAME}" >> .env
+          echo "DB_USER=${DB_USER}" >> .env
+          echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+          echo "ADMIN_LOGIN=${ADMIN_LOGIN}" >> .env
+          echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" >> .env
+
       - name: Build App
         run: |
-          echo "DB_USER: $DB_USER"
-          echo "DB_PASSWORD: $DB_PASSWORD"
-          echo "DB_HOST: $DB_HOST"
-          echo "DB_PORT: $DB_PORT"
-          echo "Checking environment variables..."
-          env
-          go build -o app-dictionary -ldflags "-linkmode external -extldflags -static"
-          go build -o app-dictionary -ldflags "-linkmode external -extldflags -static"
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          APP_HOST: ${{ env.APP_HOST }}
-          APP_PORT: ${{ env.APP_PORT }}
-          APP_PROTO: ${{ env.APP_PROTO }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          ADMIN_LOGIN: ${{ secrets.ADMIN_LOGIN }}
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          go build -o app-dictionary -ldflags "-linkmode external -extldflags -static"  
 
       - name: Deploy to VM
         run: |
           sudo apt-get install -y ssh rsync
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
           chmod 600 deploy_key.pem
-
           ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mkdir -p ${{ env.DEPLOY_DIRECTORY }}"
           rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./app-dictionary ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
           rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./deployment ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
-
-          sudo touch .env ${{ env.DEPLOY_DIRECTORY }}
 
       - name: Remove old systemd service file
         run: |
