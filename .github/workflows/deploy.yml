@@ -64,12 +64,7 @@ jobs:
           echo "DB_PASSWORD=${{ env.DB_PASSWORD }}" >> .env
           echo "ADMIN_LOGIN=${{ env.ADMIN_LOGIN }}" >> .env
           echo "ADMIN_PASSWORD=${{ env.ADMIN_PASSWORD }}" >> .env
-          
-          sudo chown root:root .env
-          sudo chmod 644 .env
-          mv .env ${{ env.DEPLOY_DIRECTORY }}
-#          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' .env.deploy ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}/.env.deploy
-#          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv ${{ env.DEPLOY_DIRECTORY }}/.env.deploy ${{ env.DEPLOY_DIRECTORY }}/.env"
+          sudo mv .env ${{ env.DEPLOY_DIRECTORY }}
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           APP_HOST: ${{ env.APP_HOST }}
