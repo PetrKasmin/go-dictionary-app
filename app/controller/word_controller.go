@@ -28,7 +28,7 @@ func (ctr *AppController) RenderWord(c *fiber.Ctx) error {
 	}
 
 	if word.ID == 0 {
-		return c.Render("views/errors/400", ctr.GetError(err))
+		return c.Render("views/errors/404", ctr.GetError(err))
 	}
 
 	words, err := ctr.WordRepository.GetWordsByDictAndTitle(dictionary.ID, word.Title)

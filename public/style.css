@@ -48,12 +48,13 @@ header nav form label .icon {
 }
 
 .logo {
-  width: 200px;
-  height: 40px;
+  width: 170px;
+  height: 42px;
   margin-top: 10px;
   margin-right: 10px;
   display: block;
-  background: url("../public/logo.png");
+  background: url("../public/logo.png") no-repeat -50px 0;
+  background-size: cover;
 }
 
 body {

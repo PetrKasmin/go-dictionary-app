@@ -30,7 +30,7 @@ func (ctr *AppController) RenderDict(c *fiber.Ctx) error {
 	}
 
 	if dictionary.ID == 0 {
-		return c.Render("views/errors/400", ctr.GetError(errors.New("словарь не найден")))
+		return c.Render("views/errors/404", ctr.GetError(errors.New("словарь не найден")))
 	}
 
 	letters, err := ctr.LetterRepository.GetAllByDict(dictionary.ID)

@@ -3,11 +3,13 @@ package bootstrap
 import (
 	"github.com/app-dictionary/pkg/database"
 	"github.com/app-dictionary/pkg/env"
+	"github.com/app-dictionary/pkg/minify"
 	"github.com/app-dictionary/pkg/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/csrf"
+	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -42,6 +44,11 @@ func NewApplication(embedFS http.FileSystem) *fiber.App {
 		Level: compress.LevelBestSpeed,
 	}))
 
+	app.Use(favicon.New(favicon.Config{
+		File: "./public/favicon.ico",
+		URL:  "./public/favicon.ico",
+	}))
+
 	app.Use("/public", filesystem.New(filesystem.Config{
 		Root:       embedFS,
 		PathPrefix: "public",
@@ -61,6 +68,21 @@ func NewApplication(embedFS http.FileSystem) *fiber.App {
 	if !env.IsProduction() {
 		app.Use(logger.New())
 	}
+
+	app.Use(minify.New())
+
+	cfg := minify.Config{
+		MinifyHTML: true,
+		MinifyHTMLOptions: minify.MinifyHTMLOptions{
+			MinifyScripts: true,
+			MinifyStyles:  true,
+		},
+		MinifyCSS: true,
+		MinifyJS:  true,
+		Method:    minify.GET,
+	}
+
+	app.Use(minify.New(cfg))
 
 	router.InstallRouter(app, embedFS)
 
