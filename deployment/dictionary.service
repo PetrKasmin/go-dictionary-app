@@ -1,0 +1,14 @@
+[Unit]
+Description=app dictionary
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/var/www/encycloped.ru2
+ExecStart=/var/www/encycloped.ru2/app-dictionary
+Restart=always
+RestartSec=4
+StandardOutput=inherit
+
+[Install]
+WantedBy=multi-user.target

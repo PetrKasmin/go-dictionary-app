@@ -11,7 +11,7 @@ jobs:
 
     env:
       HOST: root@212.109.192.85
-      DEPLOY_DIRECTORY: /var/www/encycloped.ru
+      DEPLOY_DIRECTORY: /var/www/encycloped.ru2
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       ENV: production
       APP_HOST: 0.0.0.0
@@ -40,7 +40,7 @@ jobs:
 
       - name: Build App
         run: |
-          go build -o app
+          go build -o app-dictionary
           
       - name: Deploy to VM
         run: |
@@ -62,3 +62,18 @@ jobs:
           DB_PASSWORD: ${{ env.DB_PASSWORD }}
           ADMIN_LOGIN: ${{ env.ADMIN_LOGIN }}
           ADMIN_PASSWORD: ${{ env.ADMIN_PASSWORD }}
+
+      - name: Remove old systemd service file
+        run: |
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "rm -f /etc/systemd/system/app-dictionary.service"
+          - name: List workspace contents
+            run: |
+              echo "Listing deployment folder contents:"
+              ls -la ${{ github.workspace }}/deployment
+          - name: Copy systemd service file
+            run: |
+              scp -i deploy_key.pem -o StrictHostKeyChecking=no ${{ github.workspace }}/deployment/app-dictionary.service ${{ env.HOST }}:/tmp/app-dictionary.service
+              ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv /tmp/app-dictionary.service /etc/systemd/system/app-dictionary.service"
+          - name: Start application
+            run: |
+              ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "systemctl daemon-reload && systemctl restart app-dictionary.service"
