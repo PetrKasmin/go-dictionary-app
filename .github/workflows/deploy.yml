@@ -41,30 +41,6 @@ jobs:
       - name: Build App
         run: |
           go build -o app-dictionary -ldflags "-linkmode external -extldflags -static"
-          
-      - name: Deploy to VM
-        run: |
-          sudo apt-get install -y ssh rsync
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
-          chmod 600 deploy_key.pem
-
-          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mkdir -p ${{ env.DEPLOY_DIRECTORY }}"
-          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./app-dictionary ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
-
-          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./deployment ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
-
-          echo "ENV=${{ env.ENV }}" > .env
-          echo "APP_HOST=${{ env.APP_HOST }}" >> .env
-          echo "APP_PORT=${{ env.APP_PORT }}" >> .env
-          echo "APP_PROTO=${{ env.APP_PROTO }}" >> .env
-          echo "DB_HOST=${{ env.DB_HOST }}" >> .env
-          echo "DB_PORT=${{ env.DB_PORT }}" >> .env
-          echo "DB_NAME=${{ env.DB_NAME }}" >> .env
-          echo "DB_USER=${{ env.DB_USER }}" >> .env
-          echo "DB_PASSWORD=${{ env.DB_PASSWORD }}" >> .env
-          echo "ADMIN_LOGIN=${{ env.ADMIN_LOGIN }}" >> .env
-          echo "ADMIN_PASSWORD=${{ env.ADMIN_PASSWORD }}" >> .env
-          sudo mv .env ${{ env.DEPLOY_DIRECTORY }}
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           APP_HOST: ${{ env.APP_HOST }}
@@ -77,6 +53,30 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           ADMIN_LOGIN: ${{ secrets.ADMIN_LOGIN }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+      - name: Deploy to VM
+        run: |
+          sudo apt-get install -y ssh rsync
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
+          chmod 600 deploy_key.pem
+
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mkdir -p ${{ env.DEPLOY_DIRECTORY }}"
+          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./app-dictionary ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
+
+          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./deployment ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
+
+#          echo "ENV=${{ env.ENV }}" > .env
+#          echo "APP_HOST=${{ env.APP_HOST }}" >> .env
+#          echo "APP_PORT=${{ env.APP_PORT }}" >> .env
+#          echo "APP_PROTO=${{ env.APP_PROTO }}" >> .env
+#          echo "DB_HOST=${{ env.DB_HOST }}" >> .env
+#          echo "DB_PORT=${{ env.DB_PORT }}" >> .env
+#          echo "DB_NAME=${{ env.DB_NAME }}" >> .env
+#          echo "DB_USER=${{ env.DB_USER }}" >> .env
+#          echo "DB_PASSWORD=${{ env.DB_PASSWORD }}" >> .env
+#          echo "ADMIN_LOGIN=${{ env.ADMIN_LOGIN }}" >> .env
+#          echo "ADMIN_PASSWORD=${{ env.ADMIN_PASSWORD }}" >> .env
+          sudo mv .env ${{ env.DEPLOY_DIRECTORY }}
 
       - name: Remove old systemd service file
         run: |
