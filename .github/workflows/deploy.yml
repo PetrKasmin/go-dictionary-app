@@ -86,8 +86,8 @@ jobs:
 
       - name: List workspace contents
         run: |
-          echo "Listing deployment folder contents:"
-          ls -la ${{ github.workspace }}/deployment
+          echo "Listing workspace contents:"
+          ls -la ${{ github.workspace }}
 
       - name: Copy systemd service file
         run: |
