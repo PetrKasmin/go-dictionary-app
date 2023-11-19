@@ -48,13 +48,11 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key.pem
           chmod 600 deploy_key.pem
 
-          # Копирование бинарника
+          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mkdir -p ${{ env.DEPLOY_DIRECTORY }}"
           rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./app-dictionary ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
 
-          # Копирование папки deployment
           rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' ./deployment ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}
 
-          # Копирование .env_deploy и замена на .env
 #          rsync -avz -e 'ssh -i deploy_key.pem -o StrictHostKeyChecking=no' --exclude='.git' .env.deploy ${{ env.HOST }}:${{ env.DEPLOY_DIRECTORY }}/.env.deploy
 #          ssh -i deploy_key.pem -o StrictHostKeyChecking=no ${{ env.HOST }} "mv ${{ env.DEPLOY_DIRECTORY }}/.env.deploy ${{ env.DEPLOY_DIRECTORY }}/.env"
         env:
