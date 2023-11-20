@@ -19,21 +19,25 @@ func (ctr *AppController) RenderWord(c *fiber.Ctx) error {
 
 	dictionary, err := ctr.DictRepository.GetBySlug(slugDict)
 	if err != nil {
-		return c.Render("views/errors/500", ctr.GetError(err))
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse())
 	}
 
 	word, err := ctr.WordRepository.GetWordByDictAndTitle(dictionary.ID, slugWord)
 	if err != nil {
-		return c.Render("views/errors/500", ctr.GetError(err))
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse())
 	}
 
 	if word.ID == 0 {
-		return c.Render("views/errors/404", ctr.GetError(err))
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse(fiber.StatusNotFound))
 	}
 
 	words, err := ctr.WordRepository.GetWordsByDictAndTitle(dictionary.ID, word.Title)
 	if err != nil {
-		return c.Render("views/errors/500", ctr.GetError(err))
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse())
 	}
 
 	for i, w := range words {
@@ -43,7 +47,8 @@ func (ctr *AppController) RenderWord(c *fiber.Ctx) error {
 
 	wordsForNav, err := ctr.WordRepository.GetWordForNav(word.ID)
 	if err != nil {
-		return c.Render("views/errors/500", ctr.GetError(err))
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse())
 	}
 
 	var prev, next repositories.Link
@@ -66,5 +71,5 @@ func (ctr *AppController) RenderWord(c *fiber.Ctx) error {
 	ctr.Data.PrevLink = prev
 	ctr.Data.NextLink = next
 
-	return c.Render("views/word", ctr.GetResponse())
+	return c.Render("views/word", ctr.Response())
 }

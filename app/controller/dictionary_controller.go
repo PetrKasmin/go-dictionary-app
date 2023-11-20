@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"errors"
 	"github.com/app-dictionary/app/helpers"
 	"github.com/gofiber/fiber/v2"
 )
@@ -26,16 +25,19 @@ func (ctr *AppController) RenderDict(c *fiber.Ctx) error {
 
 	dictionary, err := ctr.DictRepository.GetBySlug(slug)
 	if err != nil {
-		return c.Render("views/errors/500", ctr.GetError(err))
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse())
 	}
 
 	if dictionary.ID == 0 {
-		return c.Render("views/errors/404", ctr.GetError(errors.New("словарь не найден")))
+		c.Status(fiber.StatusNotFound)
+		return c.Render("views/errors/error", ctr.ErrorResponse(fiber.StatusNotFound))
 	}
 
 	letters, err := ctr.LetterRepository.GetAllByDict(dictionary.ID)
 	if err != nil {
-		return c.Render("views/errors/500", ctr.GetError(err))
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse())
 	}
 
 	if letter == "" && len(letters) > 0 {
@@ -44,12 +46,14 @@ func (ctr *AppController) RenderDict(c *fiber.Ctx) error {
 
 	letterModel, err := ctr.LetterRepository.GetByDict(dictionary.ID, letter)
 	if err != nil {
-		return c.Render("views/errors/500", ctr.GetError(err))
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse())
 	}
 
 	words, err := ctr.WordRepository.GetByDictAndLetter(dictionary.ID, letterModel.ID, limit, offset)
 	if err != nil {
-		return c.Render("views/errors/500", ctr.GetError(err))
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse())
 	}
 
 	var prev int
@@ -77,5 +81,5 @@ func (ctr *AppController) RenderDict(c *fiber.Ctx) error {
 	ctr.Data.CanPrevPage = page > 1
 	ctr.Data.CanNextPage = len(words) == limit
 
-	return c.Render("views/dictionary", ctr.GetResponse())
+	return c.Render("views/dictionary", ctr.Response())
 }

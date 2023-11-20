@@ -8,11 +8,12 @@ import (
 func (ctr *AppController) RenderMain(c *fiber.Ctx) error {
 	dictionaries, err := ctr.DictRepository.GetAll()
 	if err != nil {
-		return c.Render("views/errors/500", ctr.GetError(err))
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse())
 	}
 
 	ctr.Data.Title = "Словари, энциклопедии и справочники"
 	ctr.Data.DictionariesByChunks = helpers.GetChunks(dictionaries, 2)
 
-	return c.Render("views/main", ctr.GetResponse())
+	return c.Render("views/main", ctr.Response())
 }

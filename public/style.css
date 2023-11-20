@@ -181,6 +181,16 @@ footer p {
   gap: 1rem;
 }
 
+.error {
+  display: block;
+  max-width: 460px;
+  margin: 80px auto;
+}
+.error .link {
+  display: flex;
+  align-items: center;
+}
+
 /* cyrillic-ext */
 @font-face {
   font-family: "Roboto";

@@ -199,6 +199,17 @@ footer {
   }
 }
 
+.error {
+  display: block;
+  max-width: 280px;
+  margin: 0 auto;
+
+  .link {
+    display: flex;
+    align-items: center;
+  }
+}
+
 /* cyrillic-ext */
 @font-face {
   font-family: 'Roboto';

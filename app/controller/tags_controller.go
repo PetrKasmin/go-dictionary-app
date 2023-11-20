@@ -6,5 +6,5 @@ import (
 
 func (ctr *AppController) RenderTags(c *fiber.Ctx) error {
 	ctr.Data.Title = "Теги"
-	return c.Render("views/main", ctr.GetResponse())
+	return c.Render("views/main", ctr.Response())
 }

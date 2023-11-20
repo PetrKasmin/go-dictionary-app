@@ -6,5 +6,5 @@ import (
 
 func (ctr *AppController) RenderTerm(c *fiber.Ctx) error {
 	ctr.Data.Title = "Пользовательское соглашение"
-	return c.Render("views/terms", ctr.GetResponse())
+	return c.Render("views/terms", ctr.Response())
 }
