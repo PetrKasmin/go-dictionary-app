@@ -3,12 +3,13 @@ package repositories
 import (
 	"github.com/app-dictionary/app/models"
 	"gorm.io/gorm"
+	"log"
 )
 
 type WordRepository interface {
 	GetByDictAndLetter(dictID, letterID, limit, offset int) ([]models.Word, error)
-	GetWordsByDictAndTitle(dictID int, title string) ([]models.Word, error)
-	GetWordByDictAndTitle(dictID int, slug string) (*models.Word, error)
+	GetWordsByDictAndSlug(dictID int, slug string) ([]models.Word, error)
+	GetWordByDictAndSlug(dictID int, slug string) (*models.Word, error)
 	GetWordForNav(wordID int) ([]models.Word, error)
 	GetByDict(dictID int) ([]models.Word, error)
 	Search(title string) ([]models.Word, error)
@@ -50,7 +51,7 @@ func (w *wordRepository) GetByDict(dictID int) ([]models.Word, error) {
 	return words, nil
 }
 
-func (w *wordRepository) GetWordByDictAndTitle(dictID int, slug string) (*models.Word, error) {
+func (w *wordRepository) GetWordByDictAndSlug(dictID int, slug string) (*models.Word, error) {
 	var word models.Word
 	err := w.db.Model(&word).
 		Select("words.id, words.dictionary_id, words.letter_id, words.slug, words.title, words.content, dictionaries.title as dictionary_title, dictionaries.slug as dictionary_slug").
@@ -66,13 +67,13 @@ func (w *wordRepository) GetWordByDictAndTitle(dictID int, slug string) (*models
 	return &word, nil
 }
 
-func (w *wordRepository) GetWordsByDictAndTitle(dictId int, title string) ([]models.Word, error) {
+func (w *wordRepository) GetWordsByDictAndSlug(dictId int, slug string) ([]models.Word, error) {
 	var words []models.Word
 	err := w.db.Model(&words).
 		Distinct("words.id").
 		Select("words.id, words.dictionary_id, words.letter_id, words.slug, words.title, words.content, dictionaries.title as dictionary_title, dictionaries.slug as dictionary_slug").
 		Joins("left join dictionaries on dictionaries.id = words.dictionary_id").
-		Where("words.title = ? AND words.dictionary_id <> ?", title, dictId).
+		Where("words.slug = ? AND words.dictionary_id <> ?", slug, dictId).
 		Scan(&words).
 		Error
 
@@ -84,8 +85,9 @@ func (w *wordRepository) GetWordsByDictAndTitle(dictId int, title string) ([]mod
 }
 
 func (w *wordRepository) Search(title string) ([]models.Word, error) {
+	log.Println("title", title)
 	var words []models.Word
-	err := w.db.Model(&models.Word{}).
+	err := w.db.Model(&models.Word{}).Debug().
 		Distinct("words.id").
 		Select("words.id, words.dictionary_id, words.letter_id, words.slug, words.title, words.content, dictionaries.title as dictionary_title, dictionaries.slug as dictionary_slug").
 		Joins("left join dictionaries on dictionaries.id = words.dictionary_id").

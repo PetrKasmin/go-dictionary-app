@@ -8,6 +8,7 @@ import (
 type Data struct {
 	Title                string                `json:"title,omitempty"`
 	DictionariesByChunks [][]models.Dictionary `json:"columns,omitempty"`
+	Tags                 []models.Tag          `json:"tags,omitempty"`
 	Dictionary           *models.Dictionary    `json:"dictionary,omitempty"`
 	DictionaryWords      []models.Word         `json:"dictionary_words,omitempty"`
 	Letters              []models.Letter       `json:"letters,omitempty"`

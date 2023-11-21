@@ -4,21 +4,19 @@ import (
 	"fmt"
 	"github.com/app-dictionary/app/helpers"
 	"github.com/gofiber/fiber/v2"
-	"log"
 )
 
 func (ctr *AppController) Search(c *fiber.Ctx) error {
-	word := c.Params("word")
+	//word := c.Query("word")
 
-	log.Println("word", word)
-
-	words, err := ctr.WordRepository.Search(word)
-	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
-	}
+	//words, err := ctr.WordRepository.Search(word)
+	//log.Println("words", words)
+	//if err != nil {
+	//	return c.SendStatus(fiber.StatusInternalServerError)
+	//}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"words": words,
+		"words": "words",
 	})
 }
 

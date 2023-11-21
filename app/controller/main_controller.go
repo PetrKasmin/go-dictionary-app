@@ -6,6 +6,12 @@ import (
 )
 
 func (ctr *AppController) RenderMain(c *fiber.Ctx) error {
+	tags, err := ctr.TagRepository.GetAll()
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError)
+		return c.Render("views/errors/error", ctr.ErrorResponse())
+	}
+
 	dictionaries, err := ctr.DictRepository.GetAll()
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
@@ -13,6 +19,7 @@ func (ctr *AppController) RenderMain(c *fiber.Ctx) error {
 	}
 
 	ctr.Data.Title = "Словари, энциклопедии и справочники"
+	ctr.Data.Tags = tags
 	ctr.Data.DictionariesByChunks = helpers.GetChunks(dictionaries, 2)
 
 	return c.Render("views/main", ctr.Response())

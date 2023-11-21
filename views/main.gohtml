@@ -2,7 +2,20 @@
     {{template "views/layouts/menu" .}}
 </header>
 <section class="container">
-    <div class="box"></div>
+    {{ .Data.Tags }}
+{{/*    <div class="box">*/}}
+{{/*        {{range .Data.Tags}}*/}}
+{{/*            <ul>*/}}
+{{/*                {{range .}}*/}}
+{{/*                    <li>*/}}
+{{/*                        <a href="/{{.Slug}}">*/}}
+{{/*                            {{.Title}}*/}}
+{{/*                        </a>*/}}
+{{/*                    </li>*/}}
+{{/*                {{end}}*/}}
+{{/*            </ul>*/}}
+{{/*        {{end}}*/}}
+{{/*    </div>*/}}
     <h1>{{.Data.Title}}</h1>
     <div id="dictionaries">
         {{range .Data.DictionariesByChunks}}

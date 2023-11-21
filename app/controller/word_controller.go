@@ -23,7 +23,7 @@ func (ctr *AppController) RenderWord(c *fiber.Ctx) error {
 		return c.Render("views/errors/error", ctr.ErrorResponse())
 	}
 
-	word, err := ctr.WordRepository.GetWordByDictAndTitle(dictionary.ID, slugWord)
+	word, err := ctr.WordRepository.GetWordByDictAndSlug(dictionary.ID, slugWord)
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
 		return c.Render("views/errors/error", ctr.ErrorResponse())
@@ -34,7 +34,7 @@ func (ctr *AppController) RenderWord(c *fiber.Ctx) error {
 		return c.Render("views/errors/error", ctr.ErrorResponse(fiber.StatusNotFound))
 	}
 
-	words, err := ctr.WordRepository.GetWordsByDictAndTitle(dictionary.ID, word.Title)
+	words, err := ctr.WordRepository.GetWordsByDictAndSlug(dictionary.ID, slugWord)
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
 		return c.Render("views/errors/error", ctr.ErrorResponse())
