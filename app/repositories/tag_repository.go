@@ -7,7 +7,7 @@ import (
 
 type TagRepository interface {
 	GetAll() ([]models.Tag, error)
-	GetTagByID(tagID int) (*models.Tag, error)
+	GetBySlug(slug string) (*models.Tag, error)
 }
 
 type tagRepository struct {
@@ -26,9 +26,9 @@ func (t *tagRepository) GetAll() ([]models.Tag, error) {
 	return tags, nil
 }
 
-func (t *tagRepository) GetTagByID(tagID int) (*models.Tag, error) {
+func (t *tagRepository) GetBySlug(slug string) (*models.Tag, error) {
 	var tag models.Tag
-	if err := t.db.Find(&tag, tagID).Error; err != nil {
+	if err := t.db.Find(&tag, "slug = ?", slug).Error; err != nil {
 		return nil, err
 	}
 	return &tag, nil

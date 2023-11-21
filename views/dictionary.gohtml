@@ -2,7 +2,7 @@
     {{template "views/layouts/menu" .}}
 </header>
 <section class="container">
-    <h1>{{$dictionary := .Data.Dictionary}} {{ $dictionary.Title }} </h1>
+    <h1>{{$dictionary := .Data.Dictionary}}{{$dictionary.Title}}</h1>
     <ul id="abc">
         {{range .Data.Letters}}
             <li>

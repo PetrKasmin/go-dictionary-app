@@ -8,6 +8,7 @@ import (
 type DictRepository interface {
 	GetBySlug(slug string) (*models.Dictionary, error)
 	GetAll() ([]models.Dictionary, error)
+	GetByTag(slug string) ([]models.Dictionary, error)
 }
 
 type dictRepository struct {
@@ -32,4 +33,21 @@ func (d *dictRepository) GetBySlug(slug string) (*models.Dictionary, error) {
 		return nil, err
 	}
 	return &dictionary, nil
+}
+
+func (d *dictRepository) GetByTag(slug string) ([]models.Dictionary, error) {
+	var dictionaries []models.Dictionary
+	err := d.db.Model(&dictionaries).
+		Select("dictionaries.id, dictionaries.slug, dictionaries.title, dictionaries.author, dictionaries.count_words").
+		Joins("left join dictionaries_tags on dictionaries_tags.dictionary_id = dictionaries.id").
+		Joins("left join tags on tags.id = dictionaries_tags.tag_id").
+		Where("tags.slug = ?", slug).
+		Scan(&dictionaries).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return dictionaries, nil
 }

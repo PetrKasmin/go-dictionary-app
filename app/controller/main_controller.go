@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/app-dictionary/app/helpers"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -20,7 +19,7 @@ func (ctr *AppController) RenderMain(c *fiber.Ctx) error {
 
 	ctr.Data.Title = "Словари, энциклопедии и справочники"
 	ctr.Data.Tags = tags
-	ctr.Data.DictionariesByChunks = helpers.GetChunks(dictionaries, 2)
+	ctr.Data.Dictionaries = dictionaries
 
 	return c.Render("views/main", ctr.Response())
 }

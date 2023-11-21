@@ -3,17 +3,6 @@
 </header>
 <section class="container">
     <div class="box"></div>
-    <h3>Категории</h3>
-    <ul id="tags">
-        {{range .Data.Tags}}
-            <li>
-                <a href="tag/{{.Slug}}">
-                    {{.Title}}
-                </a>
-            </li>
-        {{end}}
-    </ul>
-    <div class="box"></div>
     <h1>{{.Data.Title}}</h1>
     <div id="dictionaries">
         <ul>
