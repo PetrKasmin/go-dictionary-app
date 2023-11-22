@@ -4,6 +4,7 @@ import (
 	"github.com/app-dictionary/pkg/database"
 	"github.com/app-dictionary/pkg/env"
 	"github.com/app-dictionary/pkg/minify"
+	"github.com/app-dictionary/pkg/redis"
 	"github.com/app-dictionary/pkg/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -23,6 +24,7 @@ func NewApplication(embedFS http.FileSystem) *fiber.App {
 
 	env.SetupEnvFile(embedFS)
 	database.SetupDatabase()
+	redis.SetupRedisClient()
 
 	engine := html.NewFileSystem(embedFS, ".gohtml")
 	engine.AddFunc(

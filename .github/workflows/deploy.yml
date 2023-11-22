@@ -23,6 +23,7 @@ jobs:
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
       ADMIN_LOGIN: ${{ secrets.ADMIN_LOGIN }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
@@ -48,6 +49,7 @@ jobs:
           echo "DB_NAME=${DB_NAME}" >> .env
           echo "DB_USER=${DB_USER}" >> .env
           echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+          echo "REDIS_PASSWORD=${REDIS_PASSWORD}" >> .env
           echo "ADMIN_LOGIN=${ADMIN_LOGIN}" >> .env
           echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" >> .env
 
