@@ -145,6 +145,10 @@ a:active, a:hover {
   -moz-columns: 3;
   gap: 50px;
 }
+#dictionaries ul .symbol {
+  display: block;
+  margin-top: 20px;
+}
 
 #words {
   list-style: none;
