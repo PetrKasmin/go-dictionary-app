@@ -6,4 +6,5 @@ type Dictionary struct {
 	Title      string `json:"title"`
 	Author     string `json:"author"`
 	CountWords string `json:"count_words"`
+	IsDivider  bool   `json:"is_divider"`
 }

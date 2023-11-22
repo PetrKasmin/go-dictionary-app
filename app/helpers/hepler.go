@@ -9,8 +9,10 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
+	"unicode"
 )
 
 const (
@@ -18,6 +20,32 @@ const (
 	sitemapsDir       = "sitemaps"
 	sitemapsIndexFile = "sitemap.xml.gz"
 )
+
+func SplitByLetter(dictionaries []models.Dictionary) ([]models.Dictionary, []string) {
+	sort.Slice(dictionaries, func(i, j int) bool {
+		return dictionaries[i].Title < dictionaries[j].Title
+	})
+
+	var letters []string
+	var result []models.Dictionary
+	firstDictionary := dictionaries[0]
+	firstLetter := []rune(firstDictionary.Title)[0]
+
+	for _, d := range dictionaries {
+		currentLetter := []rune(d.Title)[0]
+		if unicode.IsLetter(currentLetter) && firstLetter != currentLetter {
+			firstLetter = currentLetter
+			letters = append(letters, string(currentLetter))
+			result = append(result, models.Dictionary{
+				Title:     string(currentLetter),
+				IsDivider: true,
+			})
+		}
+		result = append(result, d)
+	}
+
+	return result, letters
+}
 
 func GetChunks(page []models.Dictionary, size int) [][]models.Dictionary {
 	var chunk [][]models.Dictionary

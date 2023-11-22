@@ -38,7 +38,7 @@ header nav form label input {
 header nav form label .icon {
   width: 32px;
   height: 100%;
-  padding: 1rem;
+  padding: 19px 19px 0;
   cursor: pointer;
 }
 
@@ -66,10 +66,15 @@ body {
   height: 100%;
 }
 
-h1, h2 {
+h1, h2, h3 {
   font-family: roboto, sans-serif;
-  font-weight: 500;
-  font-size: 150%;
+  display: block;
+  font-size: 1.17em;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  font-weight: bold;
 }
 
 a {
@@ -90,6 +95,10 @@ a:active, a:hover {
   max-width: 1040px;
   margin: 0 auto;
   padding: 0 16px;
+}
+
+#info {
+  font-size: 14px;
 }
 
 #abc {
@@ -203,6 +212,18 @@ footer p {
 
 #tags li {
   list-style: none;
+}
+
+#letters {
+  display: flex;
+  padding: 0;
+  margin: 0 0 30px;
+}
+
+#letters li {
+  list-style: none;
+  display: inline-block;
+  margin-right: 4px;
 }
 
 @media screen and (max-width: 500px) {
