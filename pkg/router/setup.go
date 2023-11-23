@@ -11,7 +11,7 @@ func InstallRouter(app *fiber.App, embedFS http.FileSystem) {
 	setup(
 		app,
 		controller.NewAppController(embedFS),
-		middleware.NewMiddleware(),
+		middleware.NewMiddleware(embedFS),
 		NewApiRouter(),
 		NewHttpRouter(),
 	)

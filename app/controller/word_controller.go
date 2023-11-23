@@ -10,11 +10,6 @@ import (
 
 func (ctr *AppController) RenderWord(c *fiber.Ctx) error {
 	slugWord := c.Params("word")
-	data, err := helpers.GetStaticFiles(ctr.EmbedFS, slugWord)
-	if err == nil && data != nil {
-		return c.Send(data)
-	}
-
 	slugDict := c.Params("dictionary")
 
 	dictionary, err := ctr.DictRepository.GetBySlug(slugDict)

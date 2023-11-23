@@ -1,17 +1,11 @@
 package controller
 
 import (
-	"github.com/app-dictionary/app/helpers"
 	"github.com/gofiber/fiber/v2"
 )
 
 func (ctr *AppController) RenderDict(c *fiber.Ctx) error {
 	slug := c.Params("dictionary")
-	data, err := helpers.GetStaticFiles(ctr.EmbedFS, slug)
-	if err == nil && data != nil {
-		return c.Send(data)
-	}
-
 	letter := c.Query("letter", "")
 	page := c.QueryInt("page", 1)
 
