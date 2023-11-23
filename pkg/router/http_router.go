@@ -18,7 +18,7 @@ func (h *HttpRouter) InstallRouter(
 	app.Get("/", ctr.RenderMain)
 	app.Get("/tag/:slug", ctr.RenderTag)
 	app.Get("/tags", ctr.RenderTags)
-	app.Get("/term", ctr.RenderTerm)
+	app.Get("/terms", ctr.RenderTerm)
 	app.Get("/:dictionary", ctr.RenderDict)
 	app.Get("/:dictionary/:word", ctr.RenderWord)
 	app.Get("/monit", mdw.BasicAuth, monitor.New())

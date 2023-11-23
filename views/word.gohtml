@@ -3,8 +3,12 @@
 </header>
 <article class="container">
     <div class="box"></div>
-    <p><a href="/{{.Data.Word.DictionarySlug}}"><strong>{{.Data.Word.DictionaryTitle}}</strong></a></p>
-    <h1>{{.Data.Word.Title}}</h1>
+    <p>
+        <a href="/{{.Data.Word.DictionarySlug}}">
+            <strong class="subtitle">{{.Data.Word.DictionaryTitle}}</strong>
+        </a>
+    </p>
+    <h1 class="title">{{.Data.Word.Title}}</h1>
     <p>{{unescape .Data.Word.Content}}</p>
     <ol id="more">
         {{range .Data.Words}}

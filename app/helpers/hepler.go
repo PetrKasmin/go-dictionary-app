@@ -129,7 +129,7 @@ func FileCreateSiteMap(compress bool, urls [][]string) {
 			err := smBlog.Add(&smg.SitemapLoc{
 				Loc:        url,
 				LastMod:    &now,
-				ChangeFreq: smg.Weekly,
+				ChangeFreq: smg.Weekly, // После генерации воды установить smg.Yearly
 				Priority:   0.8,
 			})
 			if err != nil {
@@ -204,6 +204,8 @@ func StringClearDataAttribute(s string) string {
 	s = strings.ReplaceAll(s, "</b>", "")
 	s = strings.ReplaceAll(s, "</dt>", "")
 	s = strings.ReplaceAll(s, "</tr>", "")
+	s = strings.ReplaceAll(s, "</td>", "")
+	s = strings.ReplaceAll(s, "`", "")
 	s = strings.ReplaceAll(s, "</td>", "")
 	s = strings.ReplaceAll(s, "\t", " ")
 	s = strings.ReplaceAll(s, "\t", " ")
