@@ -4,4 +4,4 @@ Disallow: /terms
 Disallow: /search
 Disallow: /dashboard
 
-Sitemap: https://encycloped.ru/sitemaps/sitemap.xml
+Sitemap: https://encycloped.ru/sitemaps/sitemap.xml.gz
